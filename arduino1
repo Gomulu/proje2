@@ -1,0 +1,122 @@
+, 2, myReadAPIKey);
+  Serial.print("readValue = "); 
+  Serial.println(readValue);    
+
+  if(readValue==3){
+    Serial.println("led yanmıs");
+    }
+    else if(readValue==4){ #include <ESP8266WiFi.h>
+#include "ThingSpeak.h"
+#define myPeriodic 15 
+
+
+unsigned long myChannelNumber = 264865; 
+const char * myReadAPIKey = "ATBK9CNRCVX8AAYG";
+const char* server = "api.thingspeak.com";
+String apiKey ="0MOM0YVDMXY7HMV1";
+const char* MY_SSID = "L90_8311"; 
+const char* MY_PWD = "123456789";
+char ssid[] = "L90_8311";           
+char pass[] = "123456789";  
+float prevTemp = 0;
+int sent = 0;
+int butonDurum=0;
+int butonDurum2=0;
+int butonPin=5;
+int butonPin2=4;
+int readValue;
+
+WiFiClient  client;
+
+void setup() {
+
+Serial.begin(115200);
+pinMode(butonPin,INPUT);
+pinMode(butonPin2,INPUT);
+connectWifi();
+ThingSpeak.begin(client);
+}
+
+void loop() {
+  butonDurum=digitalRead(butonPin);
+  butonDurum2=digitalRead(butonPin2);
+
+  if(butonDurum==HIGH){
+  float temp;
+  temp = 1;
+  Serial.print(String(sent)+" Temperature: ");
+  Serial.println(temp);
+  sendTeperatureTS(temp);
+
+
+  cevap();
+}
+
+else if(butonDurum2==HIGH){
+  float temp;
+  temp = 2;
+  Serial.print(String(sent)+" Temperature: ");
+  Serial.println(temp);
+  sendTeperatureTS(temp);
+
+
+  cevap();
+}
+
+else
+Serial.println("Butona Basılmayı Bekliyor");
+}
+
+
+
+void connectWifi()
+{
+  Serial.print("Connecting to "+*MY_SSID);
+  WiFi.begin(MY_SSID, MY_PWD);
+  while (WiFi.status() != WL_CONNECTED) {
+  delay(1000);
+  Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("Connected");
+  Serial.println("");  
+}//end connect
+
+void sendTeperatureTS(float temp)
+{  
+   WiFiClient client;
+
+   if (client.connect(server, 80)) { // use ip 184.106.153.149 or api.thingspeak.com
+   Serial.println("WiFi Client connected ");
+
+   String postStr = apiKey;
+   postStr += "&field1=";
+   postStr += String(temp);
+   postStr += "\r\n\r\n";
+
+   client.print("POST /update HTTP/1.1\n");
+   client.print("Host: api.thingspeak.com\n");
+   client.print("Connection: close\n");
+   client.print("X-THINGSPEAKAPIKEY: " + apiKey + "\n");
+   client.print("Content-Type: application/x-www-form-urlencoded\n");
+   client.print("Content-Length: ");
+   client.print(postStr.length());
+   client.print("\n\n");
+   client.print(postStr);
+   delay(1000);
+
+   }//end if
+   sent++;
+ client.stop();
+}//end send
+
+
+
+
+void cevap(){
+
+  readValue = ThingSpeak.readIntField(myChannelNumber
+      Serial.println("led sonmus");
+      }
+  }
