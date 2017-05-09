@@ -1,0 +1,67 @@
+importurllib, http.client
+importjson,time
+fromurllib.requestimporturlopen
+importRPi.GPIO as GPIO       
+GPIO.setmode(GPIO.BOARD)
+
+READ_API_KEY='ATBK9CNRCVX8AAYG'
+CHANNEL_ID='264865'
+
+
+
+defyanit(deger): ## Geri DegerGonderme Fonksiyonu
+params =urllib.parse.urlencode({"field2": deger, "key": "0MOM0YVDMXY7HMV1"})
+headers = {"Content-typZZe": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+conn = http.client.HTTPConnection("api.thingspeak.com: 80")
+
+try:
+while True:
+conn.request("POST", " /update", params, headers)
+response = conn.getresponse()
+                    data = response.read()
+if (int(data)>0):
+break
+conn.close()
+except:
+print("connectionfailed")
+
+
+def main():
+
+
+
+GPIO.setup(7,GPIO.OUT)      ##  PineLedBaglandi
+
+while (1):    
+response = urlopen("http://api.thingspeak.com/channels/264865/feeds/last.json?api_key=ATBK9CNRCVX8AAYG").read().decode('utf8')
+        data=json.loads(response)
+sonuc=(data['field1'])
+
+ifsonuc is not None:
+durum = int(sonuc[0])
+if durum == 1 :
+GPIO.output(7,True)  ## LedYandi
+print("Açık")
+time.sleep(3)
+GPIO.output(7,False)
+yanit(3)
+                elif durum == 2 :
+GPIO.output(7,True)  ## LedYandi
+print("Açık")
+time.sleep(2)
+GPIO.output(7,False)
+time.sleep(1)
+GPIO.output(7,True)  ## LedYandi
+time.sleep(2)
+GPIO.output(7,False)
+print("Kapalı")
+yanit(4)
+else:
+print("HATA",sonuc[0])
+time.sleep(15)
+ifsonuc is None:        
+print("HATA",sonuc)
+
+
+if __name__ == '__main__':
+    main()
